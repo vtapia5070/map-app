@@ -1,55 +1,60 @@
 const apiKey = 'AIzaSyDh2BMWgF3nDnEDVdT7hcqX7mbJuJ_PLzo';
 
-const getCity = (long, lat) => {
+const getCity = (coords) => {
 
-  const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&result_type=locality&key=${apiKey}`;
+  const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${coords.latitude},${coords.longitude}&result_type=locality&key=${apiKey}`;
 
-  fetch(url)
-  .then((resp) => resp.json())
-  .then(function(data) {
-    console.log('data:', data);
-    return data.results[0].formatted_address;
-  })
-  .catch(function(err) {
-    throw new Error(err);
+  return new Promise((resolve, reject) => {
+
+    fetch(url)
+    .then((resp) => resp.json())
+    .then((data) => {
+      resolve(data.results[0].formatted_address);
+    });
+
   });
 
 };
 
-function getLocation () {
+const getCoords = () => {
 
-  const location = {};
+  return new Promise((resolve, reject) => {
 
-  const currentLocation = navigator.geolocation.getCurrentPosition((resp) => {
-    location.longitude = resp.coords.longitude;
-    location.latitude = resp.coords.latitude;
+    const coords = {};
+    const currentLocation = navigator.geolocation.getCurrentPosition((resp) => {
 
-    location.address = (async () => {
+      coords.longitude = resp.coords.longitude;
+      coords.latitude = resp.coords.latitude;
+      getCity(coords).then((city) => {
+        coords.address = city;
+        resolve(coords);
+      });
 
-      let resp;
+    }, (err) => {
 
-      try {
-        resp = await getCity(location.longitude, location.latitude);
-      } catch(e) {
-        resp = '';
-      }
+      console.log('err:', err);
+      reject(err);
 
-      return resp;
+    }, (ops) => {
 
-    })();
+      console.log('ops:', ops);
 
-  console.log('location:', location);
+    });
 
-  }, (err) => {
-    console.log('err:', err);
-  }, (ops) => {
-    console.log('ops:', ops);
+  });
+};
+
+const getLocation = new Promise((resolve, reject) => {
+
+  const coords = getCoords()
+  .then((data) => {
+
+    console.log('data', data);
+    resolve(data);
+
   });
 
-
-  return location;
-
-};
+});
 
 export {
   getLocation

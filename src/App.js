@@ -10,19 +10,22 @@ class App extends Component {
   componentWillMount () {
 
     this.setState({
-      currentLocation: {}
+      currentLocation: {
+        longitude: 0,
+        latitude: 0,
+        address: 'city'
+      }
     });
 
   }
 
   componentDidMount () {
-
-    const currentLocation = getLocation();
-
-    this.setState({
-      currentLocation
+    getLocation.then((loc) => {
+      console.log('loc:', loc);
+      this.setState({
+        currentLocation: loc
+      });
     });
-
 
   }
 
@@ -31,7 +34,7 @@ class App extends Component {
     return (
       <div className="wrapper">
         <NavBar
-          address={this.state.currentLocation.address || 'city'}
+          address={this.state.currentLocation.address}
         />
         <Map />
       </div>
