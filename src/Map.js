@@ -5,17 +5,36 @@ import GoogleMapReact from 'google-map-react';
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
 class Map extends Component {
-  static defaultProps = {
-    center: {lat: 59.95, lng: 30.33},
-    zoom: 11
-  };
 
+  componentWillMount () {
+    this.setState({
+      lat: this.props.currLatitude || 59.95,
+      lng: this.props.currLongitude || 30.33
+    })
+  }
+
+  componentWillReceiveProps (nextProps) {
+
+    this.setState({
+        lat: nextProps.currLatitude || 59.95,
+        lng: nextProps.currLongitude || 30.33
+    });
+
+  }
+
+  // TODO: update map center after initial mount
   render() {
+
+    const center = {
+      lat: this.state.lat,
+      lng: this.state.lng
+    };
+
     return (
       <div className="mapContainer">
         <GoogleMapReact
-          defaultCenter={this.props.center}
-          defaultZoom={this.props.zoom}
+          defaultCenter={center}
+          defaultZoom={this.props.zoom || 11}
         >
           <AnyReactComponent
             lat={59.955413}

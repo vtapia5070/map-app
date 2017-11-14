@@ -49,7 +49,6 @@ const getLocation = new Promise((resolve, reject) => {
   const coords = getCoords()
   .then((data) => {
 
-    console.log('data', data);
     resolve(data);
 
   });

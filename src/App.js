@@ -30,13 +30,19 @@ class App extends Component {
   }
 
   render() {
+    const {
+      currentLocation
+    } = this.state;
 
     return (
       <div className="wrapper">
         <NavBar
-          address={this.state.currentLocation.address}
+          address={currentLocation.address}
         />
-        <Map />
+        <Map
+          currLongitude={currentLocation.longitude}
+          currLatitude={currentLocation.latitude}
+         />
       </div>
     );
   }
