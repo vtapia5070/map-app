@@ -11,14 +11,13 @@ class NavBar extends Component {
     }
 
     componentWillReceiveProps (nextProps) {
-        console.log('nextProps:', nextProps);
+
         this.setState({
             address: nextProps.address
         });
     }
 
   render() {
-    console.log('props', this.props);
 
     return (
       <div className="navBar">

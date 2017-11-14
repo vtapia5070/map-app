@@ -23,12 +23,10 @@ class App extends Component {
       currentLocation
     });
 
-    console.log('got location', currentLocation);
 
   }
 
   render() {
-    console.log('state:', this.state);
 
     return (
       <div className="wrapper">

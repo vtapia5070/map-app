@@ -1,40 +1,51 @@
 const apiKey = 'AIzaSyDh2BMWgF3nDnEDVdT7hcqX7mbJuJ_PLzo';
 
-const getCity = (coords) => {
+const getCity = (long, lat) => {
 
-  const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${coords.latitude},${coords.longitude}&result_type=locality&key=${apiKey}`
-
-  let address = '';
+  const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&result_type=locality&key=${apiKey}`;
 
   fetch(url)
-  .then((resp) => resp.json()) // Transform the data into json
+  .then((resp) => resp.json())
   .then(function(data) {
     console.log('data:', data);
-    address = data.results[0].formatted_address;
+    return data.results[0].formatted_address;
   })
   .catch(function(err) {
-    console.log('err', err);
+    throw new Error(err);
   });
-
-  return address;
 
 };
 
-const getLocation = () => {
+function getLocation () {
+
   const location = {};
 
   const currentLocation = navigator.geolocation.getCurrentPosition((resp) => {
-    console.log('resp', resp);
     location.longitude = resp.coords.longitude;
     location.latitude = resp.coords.latitude;
-    console
-    location.address = getCity(location);
+
+    location.address = (async () => {
+
+      let resp;
+
+      try {
+        resp = await getCity(location.longitude, location.latitude);
+      } catch(e) {
+        resp = '';
+      }
+
+      return resp;
+
+    })();
+
+  console.log('location:', location);
 
   }, (err) => {
     console.log('err:', err);
   }, (ops) => {
     console.log('ops:', ops);
   });
+
 
   return location;
 
