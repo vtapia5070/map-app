@@ -1,28 +1,41 @@
 import React, { Component } from 'react';
 import './App.css';
-import GoogleMapReact from 'google-map-react';
+import Map from './Map.js';
+import NavBar from './NavBar.js';
+import { getLocation } from './Utils.js'
 
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
 class App extends Component {
-  static defaultProps = {
-    center: {lat: 59.95, lng: 30.33},
-    zoom: 11
-  };
+
+  componentWillMount () {
+
+    this.setState({
+      currentLocation: {}
+    });
+
+  }
+
+  componentDidMount () {
+
+    const currentLocation = getLocation();
+
+    this.setState({
+      currentLocation
+    });
+
+    console.log('got location', currentLocation);
+
+  }
 
   render() {
+    console.log('state:', this.state);
+
     return (
-      <div className="mapContainer">
-        <GoogleMapReact
-          defaultCenter={this.props.center}
-          defaultZoom={this.props.zoom}
-        >
-          <AnyReactComponent
-            lat={59.955413}
-            lng={30.337844}
-            text={'Kreyser Avrora'}
-          />
-        </GoogleMapReact>
+      <div className="wrapper">
+        <NavBar
+          address={this.state.currentLocation.address || 'city'}
+        />
+        <Map />
       </div>
     );
   }

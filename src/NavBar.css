@@ -1,0 +1,18 @@
+nav {
+    background-color: #add8e6;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    height: 40px;
+    width: 100%;
+    z-index: 1;
+}
+
+.locationInput {
+    height: 20px;
+}
+
+.logo {
+    color: #fff;
+    font-weight: 600;
+}
